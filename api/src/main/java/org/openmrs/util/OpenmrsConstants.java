@@ -898,6 +898,12 @@ public final class OpenmrsConstants {
 	public static String GP_PASSWORD_MINIMUM_LENGTH = "security.passwordMinimumLength";
 	
 	/**
+	 * Global property name that allows specification of whether user passwords are according to the
+	 * standard.(Password with at lease 8 characters including a number, an upper case letter and a lower case letter
+	 */
+	public static String GP_PASSWORD_BELOW_STANDARD = "security.passwordNotSecure";
+	
+	/**
 	 * Global property name that allows specification of a regular expression that passwords must
 	 * adhere to
 	 */
@@ -1328,6 +1334,10 @@ public final class OpenmrsConstants {
 		
 		props.add(new GlobalProperty(GP_PASSWORD_REQUIRES_NON_DIGIT, "true",
 		        "Configure whether passwords must contain at least one non-digit", BooleanDatatype.class, null));
+		
+		props.add(new GlobalProperty(GP_PASSWORD_BELOW_STANDARD, "true",
+		        "Configure whether passwords is according to the standard password content rules", BooleanDatatype.class,
+		        null));
 		
 		props
 		        .add(new GlobalProperty(GP_PASSWORD_REQUIRES_UPPER_AND_LOWER_CASE, "true",

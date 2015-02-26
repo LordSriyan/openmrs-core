@@ -184,8 +184,9 @@ public class UserFormController {
 			if (!password.equals(confirm))
 				errors.reject("error.password.match");
 			
-			if (password.length() == 0 && isNewUser(user))
-				errors.reject("error.password.belowStandard");
+			if (password.length() == 0 && isNewUser(user)) {
+				errors.reject("options.login.password.null");
+			}
 			
 			//check password strength
 			if (password.length() > 0) {

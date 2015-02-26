@@ -2259,6 +2259,7 @@ public class OpenmrsUtil {
 		String caseGp = "true";
 		String digitGp = "true";
 		String nonDigitGp = "true";
+		String securePasswordRulesGp = "true";
 		String regexGp = null;
 		AdministrationService svc = null;
 		
@@ -2280,6 +2281,12 @@ public class OpenmrsUtil {
 			digitGp = svc.getGlobalProperty(OpenmrsConstants.GP_PASSWORD_REQUIRES_DIGIT, digitGp);
 			nonDigitGp = svc.getGlobalProperty(OpenmrsConstants.GP_PASSWORD_REQUIRES_NON_DIGIT, nonDigitGp);
 			regexGp = svc.getGlobalProperty(OpenmrsConstants.GP_PASSWORD_CUSTOM_REGEX, regexGp);
+			securePasswordRulesGp = svc
+			        .getGlobalProperty(OpenmrsConstants.GP_PASSWORD_BELOW_STANDARD, securePasswordRulesGp);
+		}
+		
+		if ("true".equals(securePasswordRulesGp) && (!containsUpperAndLowerCase(password) || !containsDigit(password))) {
+			throw new InvalidCharactersPasswordException(getMessage("error.password.notSecure"));
 		}
 		
 		if (password == null) {
@@ -2294,7 +2301,7 @@ public class OpenmrsUtil {
 			try {
 				int minLength = Integer.parseInt(lengthGp);
 				if (password.length() < minLength) {
-					throw new ShortPasswordException(getMessage("error.password.belowStandard", lengthGp));
+					throw new ShortPasswordException(getMessage("error.password.length", lengthGp));
 				}
 			}
 			catch (NumberFormatException nfe) {
@@ -2305,15 +2312,15 @@ public class OpenmrsUtil {
 		}
 		
 		if ("true".equals(caseGp) && !containsUpperAndLowerCase(password)) {
-			throw new InvalidCharactersPasswordException(getMessage("error.password.belowStandard"));
+			throw new InvalidCharactersPasswordException(getMessage("error.password.requireMixedCase"));
 		}
 		
 		if ("true".equals(digitGp) && !containsDigit(password)) {
-			throw new InvalidCharactersPasswordException(getMessage("error.password.belowStandard"));
+			throw new InvalidCharactersPasswordException(getMessage("error.password.requireNumber"));
 		}
 		
 		if ("true".equals(nonDigitGp) && containsOnlyDigits(password)) {
-			throw new InvalidCharactersPasswordException(getMessage("error.password.belowStandard"));
+			throw new InvalidCharactersPasswordException(getMessage("error.password.requireLetter"));
 		}
 		
 		if (StringUtils.isNotEmpty(regexGp)) {
